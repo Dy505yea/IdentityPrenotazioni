@@ -1,0 +1,13 @@
+@model ConfermaViewModel
+@{
+    ViewData["Title"]="Conferma Operazione Riuscita";
+    ViewData["Message"]=Model.Message;
+}
+<div class="container d-flex align-items-center justify-content-center flex-column text-center mt-5">
+    <h2 class="text-primary-rgb">@Model.Message</h2>
+    <form method="post" class="d-flex flex-column w-25">
+        <input type="hidden" name="returnUrl" value="@Model.ReturnUrl" />
+        <input type="hidden" name="email" value="" />
+        <button type="submit" class="btn bg-tertiary-rgb-opacity-8 text-secondary-rgb my-3" asp-area="" asp-controller="@Model.ReturnController" asp-action="@Model.ReturnUrl">Ok</button>
+    </form>
+</div>

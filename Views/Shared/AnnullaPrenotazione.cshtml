@@ -1,0 +1,21 @@
+@model PrenotazioneViewModel
+@{
+    ViewData["Title"] = "Annullare l'appuntamento?";
+    var prenotazione=Model.Prenotazione;
+}
+
+<div class="container d-flex align-items-center justify-content-center flex-column text-center">
+    <h1 class="text-primary-rgb my-3">@ViewData["Title"]</h1>
+    <h2 class="text-quinary-rgb">Lei sta annullando l'appuntamento per @prenotazione.NomeEvento previsto
+        <b><br> il @prenotazione.Data alle @prenotazione.Ora<br>per il sr/la sra @prenotazione.Cognome e @prenotazione.Nome</b>
+    </h2>
+        <div class="d-flex justify-content-around align-items-center w-25">
+            <form method="post">
+                <input type="hidden" name="returnUrl" value="@Model.ReturnUrl" />
+                <input type="hidden" name="returnController" value="@Model.ReturnController" />
+                <button type="submit" class="btn bg-quinary-rgb my-3 text-secondary-rgb" asp-route-idPrenotazione="@prenotazione.Id"
+                asp-controller="Prenotazione" asp-action="AnnullaPrenotazione">Conferma Operazione</button>
+            </form>
+            <a class="btn bg-tertiary-rgb text-secondary-rgb" asp-controller="@Model.ReturnController" asp-action="@Model.ReturnUrl">Annulla Operazione</a>
+        </div>
+</div>

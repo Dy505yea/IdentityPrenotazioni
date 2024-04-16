@@ -1,0 +1,36 @@
+@model PrenotazioneViewModel
+@*Ancora da aggiungere una sezione per scegliere l'ente per l'admin*@
+@{
+    ViewData["Title"] = "Eliminare questa disponibilità?";
+    var prenotazione=Model.Prenotazione;
+    string informazioniAggiuntive="";
+    if(prenotazione.NomeEvento!=null)
+    {
+        informazioniAggiuntive+="Per "+prenotazione.NomeEvento+" ";
+        if(prenotazione.Nome!=null || prenotazione.Cognome!=null)
+            informazioniAggiuntive+="con il/la sig. ";
+        if(prenotazione.Cognome!=null)
+            informazioniAggiuntive+=prenotazione.Cognome+ " ";
+        if(prenotazione.Nome!=null)
+            informazioniAggiuntive+=prenotazione.Nome+" ";
+    }
+}
+<div class="container d-flex align-items-center justify-content-center flex-column text-center">
+    <div>
+        <h1 class="text-primary-rgb my-3">@ViewData["Title"]</h1>
+        <h2 class="text-quinary-rgb">Lei sta cancellando la disponibilità per il <b>@prenotazione.Data
+                alle @prenotazione.Ora</b> <br>
+                @informazioniAggiuntive
+        </h2>
+    </div>
+    <div class="d-flex justify-content-between align-items-center w-25">
+            <form method="post">
+                <input type="hidden" name="returnUrl" value="@Model.ReturnUrl" />
+                <input type="hidden" name="returnController" value="@Model.ReturnController" />
+                <button type="submit" class="btn bg-quinary-rgb my-3 text-secondary-rgb" asp-route-idPrenotazione="@prenotazione.Id"
+                asp-controller="Prenotazione" asp-action="CancellaPrenotazione">Conferma Operazione</button>
+            </form>
+            <a class="btn bg-tertiary-rgb text-secondary-rgb" asp-controller="@Model.ReturnController" asp-action="@Model.ReturnUrl">Annulla Operazione</a>
+        </div>
+
+</div>

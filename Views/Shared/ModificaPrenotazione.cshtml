@@ -1,0 +1,77 @@
+@using IdentityPrenotazioni.Data
+@model PrenotazioneViewModel
+@{
+    ViewData["Title"] = "Modifica prenotazione";
+    int i = 0;
+    var adb= new ApplicationDbContext();
+    var miaPrenotazione=Model.Prenotazione;
+    var prenotazioni=adb.GetPrenotazioniDisponibili().Where(p=>p.Prenotato==false);
+    var eventi=adb.Db.DammiEventi();
+    ViewData[$"dataPrenotazione"] = miaPrenotazione.Data + '|' + miaPrenotazione.Ora;
+}
+<div class="d-flex container flex-column align-items-center justify-content-center flex-column">
+    <h1 class="text-center text-primary-rgb my-4">@ViewData["Title"] </h1>
+    <div class="my-3 w-50">
+        <form method="post" class="d-flex flex-column">
+            <div class="mb-3">
+                <label for="cognome" class="form-label text-primary-rgb">Cognome</label>
+                <input type="cognome" name="cognome" class="form-control" value="@miaPrenotazione.Cognome"
+                    id="exampleFormControlInput1" placeholder="@miaPrenotazione.Cognome" required>
+            </div>
+            <div class="mb-3">
+                <label for="nome" class="form-label text-primary-rgb">Nome</label>
+                <input type="nome" name="nome" class="form-control" value="@miaPrenotazione.Nome"
+                    id="exampleFormControlInput1" placeholder="@miaPrenotazione.Nome" required>
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label text-primary-rgb">E-mail</label>
+                <input type="email" name="email" class="form-control" value="@miaPrenotazione.Email"
+                    id="exampleFormControlInput1" placeholder="@miaPrenotazione.Email" required>
+            </div>
+            <label for="datacompleta" class="form-label text-primary-rgb">Giorno e orario dell'appuntamento</label>
+
+            <select class="form-select form-select-lm mb-3 text-primary-rgb" aria-label="Large select example"
+                name="data" required>
+                <option selected value=@ViewData[$"dataPrenotazione"]>Il @miaPrenotazione.Data alle
+                    @miaPrenotazione.Ora</option>
+                @foreach (var prenotazione in prenotazioni)
+                {
+                    ViewData[$"dataPrenotazione{i}"] = prenotazione.Data + "|" + prenotazione.Ora;
+                    if (prenotazione.Data != miaPrenotazione.Data || prenotazione.Ora !=
+                    miaPrenotazione.Ora)
+                    {
+                        <option value=@ViewData[$"dataPrenotazione{i}"]>Il @prenotazione.Data alle @prenotazione.Ora</option>
+                    }
+                }
+            </select>
+            <select class="form-select form-select-lm mb-3 text-primary-rgb" aria-label="Large select example" name="evento"
+            required>
+            <!--da evento predefinito a eventi presi da un database-->
+
+           @if(miaPrenotazione.NomeEvento==null)
+            {
+                <option disabled selected value="">Scegli evento</option>
+            }
+            @foreach(var evento in eventi)
+            {
+                if(Model.Prenotazione.NomeEvento==evento.Nome)
+                {
+                    <option selected>@evento.Nome</option>
+                }
+                else
+                {
+                    <option>@evento.Nome</option>
+                }
+            }
+        </select>
+
+            <div class="d-flex justify-content-around align-items-center">
+                <input type="hidden" name="returnUrl" value="@Model.ReturnUrl" />
+                <input type="hidden" name="returnController" value="@Model.ReturnController" />
+                <button type="submit" asp-route-idPrenotazione=@miaPrenotazione.Id asp-controller="Prenotazione" asp-action="ModificaPrenotazione"
+                    class="btn bg-tertiary-rgb text-secondary-rgb my-3">Modifica</button>
+            </div>
+        </form>
+                <a asp-controller="@Model.ReturnController" asp-action="@Model.ReturnUrl" class="btn btn-dark">Annulla</a>
+    </div>
+</div>

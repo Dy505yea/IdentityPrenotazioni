@@ -1,0 +1,51 @@
+@using IdentityPrenotazioni.Data
+@model AppUser
+@{
+    ViewData["Title"] = "Nuova Prenotazione";
+    int i=0;
+    var adb= new ApplicationDbContext();
+    var prenotazioni=adb.GetPrenotazioniDisponibili();
+    var eventi=adb.Db.DammiEventi();
+}
+
+
+
+<div class="container d-flex align-items-center justify-content-center flex-column">
+    <h1 class="text-center text-primary-rgb my-4">@ViewData["Title"]</h1>
+    <form method="post" class="d-flex flex-column">
+        <div class="mb-3">
+            <label for="cognome" class="form-label text-primary-rgb">Cognome</label>
+            <input type="text" name="cognome" class="form-control" id="exampleFormControlInput1" placeholder="Cognome"
+                required>
+        </div>
+        <div class="mb-3">
+            <label for="nome" class="form-label text-primary-rgb">Nome</label>
+            <input type="text" name="nome" class="form-control" id="exampleFormControlInput1" placeholder="Nome"
+                required>
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label text-primary-rgb">E-mail</label>
+            <input type="email" name="email" class="form-control" id="exampleFormControlInput1"
+                value="@User.Identity.Name">
+        </div>
+        <select class="form-select form-select-lm mb-3 text-primary-rgb" aria-label="Large select example"
+            name="data" required>
+            <option selected>Scegli giorno e orario dell'appuntamento</option>
+            @foreach (var prenotazione in prenotazioni)
+            {
+                ViewData[$"dataPrenotazione{i}"] = prenotazione.Data + "|" + prenotazione.Ora;
+                <option value=@ViewData[$"dataPrenotazione{i}"]>Il @prenotazione.Data alle @prenotazione.Ora</option>
+            }
+        </select>
+        <select class="form-select form-select-lm mb-3 text-primary-rgb" aria-label="Large select example" name="evento"
+            required>
+            <!--da evento predefinito a eventi presi da un file-->
+            <option disabled selected value="">Scegli evento</option>
+            @foreach(var servizio in eventi)
+            {
+                    <option>@servizio.Nome</option>
+            }
+        </select>
+        <button type="submit" class="btn bg-tertiary-rgb text-secondary-rgb my-3" asp-area="" asp-controller="Prenotazione" asp-action="PrenotaPrenotazione">Invia</button>
+    </form>
+</div>
